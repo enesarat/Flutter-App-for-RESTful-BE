@@ -25,7 +25,7 @@ mixin _$TestViewModel on _TestViewModelBase, Store {
   }
 
   final _$_TestViewModelBaseActionController =
-      ActionController(name: '_TestViewModelBase');
+  ActionController(name: '_TestViewModelBase');
 
   @override
   void increment() {
