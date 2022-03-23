@@ -15,24 +15,19 @@ class SingleAgentScreen extends StatefulWidget {
 class _SingleAgentScreenState extends BaseState<SingleAgentScreen> {
   late NetworkManager service;
   AgentModel? singleAgent;
-
   bool isLoading = false;
 
   Future getAgent()async{
-    print("SA");
-    //Response response;
-    final response;
+    Response response;
     try{
       isLoading=true;
-      //response = await service.getRequest("/api/agent/getagentbyid/1");
-      response = await service.getRequest<AgentModel>("/api/agent/getagentbyid/1",AgentModel());
+      response = await service.getRequest<AgentModel>("/api/agent/getagentbyid/1");
 
       isLoading=false;
       print("status : "+response.statusCode.toString());
       if(response.statusCode==200){
         setState(() {
-          //singleAgent = AgentModel().fromJson(response.data);
-          singleAgent=response.data;
+          singleAgent = AgentModel.fromJson(response.data);
           isLoading=true;
         });
       }
@@ -40,7 +35,6 @@ class _SingleAgentScreenState extends BaseState<SingleAgentScreen> {
         print("Something went wrong. Status code not equal to 200.");
       }
     } on Exception catch (e){
-      print("oops get agent out");
       isLoading=false;
       print(e);
     }
@@ -65,8 +59,24 @@ class _SingleAgentScreenState extends BaseState<SingleAgentScreen> {
       body: (isLoading==false)
           ?Center(child: CircularProgressIndicator(),)
           : singleAgent!=null
-            ?Center(child:Text(
-              "${singleAgent?.agentManagerName}"))
+            ?Center(child:Padding(
+                padding: const EdgeInsets.only(top: 200,bottom: 200),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text(
+                        "Agent Id: ${singleAgent?.agentId}"),
+                    Text(
+                        "Agent Name: ${singleAgent?.agentName}"),
+                    Text(
+                        "Agent Manager Name: ${singleAgent?.agentManagerName}"),
+                    Text(
+                        "Agent Address: ${singleAgent?.agentAddress}"),
+                  ],
+
+                ),
+            )
+          )
             :Center(child: Text("User not found!"),)
     );
   }

@@ -20,19 +20,15 @@ class NetworkManager{
 
 
   NetworkManager._init(){
-    print("NM INIT");
-
     dio = Dio(
         BaseOptions(
           baseUrl:baseUrl,
         )
     );
-    print(baseUrl.toString());
     initInterceptors();
   }
   
   initInterceptors(){
-    print("INT INITIALIZER");
     dio.interceptors.add(InterceptorsWrapper(
       onError:(DioError,handler){
         print(DioError.message);
@@ -46,26 +42,8 @@ class NetworkManager{
     ));
   }
 
-  /*
-  Future<Response> getRequest/*<T extends BaseModel>*/(String path/*,T model*/)async{
-    Response response;
-    print("getrequest income");
-
-    try{
-      response = await _dio.get(path);
-      print("getrequest try");
-    }on DioError catch (e){
-      print("haydaaa getrequest error");
-      throw Exception(e.message);
-    }
-    print("path is : "+path.toString());
-    return response;
-  }
-   */
-  Future/*<Response>*/ getRequest<T extends BaseModel>(String path,T model)async{
-    print("getrequest entry");
+  Future<Response> getRequest<T extends BaseModel>(String path)async{
     final response;
-    final finalResponse;
     String language = "en";
     int _timeOut = 60*1000;
 
@@ -76,24 +54,19 @@ class NetworkManager{
       DEFAULT_LANGUAGE:language
     };
 
-    response = await Dio(BaseOptions(
-      baseUrl:baseUrl,
-      connectTimeout: _timeOut,
-      receiveTimeout: _timeOut,
-      headers:headers
-    )).get(path);
-    print("getrequest entry 2");
-
+    var options = BaseOptions(
+        baseUrl:baseUrl,
+        connectTimeout: _timeOut,
+        receiveTimeout: _timeOut,
+        headers:headers
+    );
 
     try{
-      finalResponse=model.fromJson(response.data);
-      print("getrequest try");
+      response = await Dio(options).get(path);
     }on DioError catch (e){
-      print("oops getrequest error");
       throw Exception(e.message);
     }
     print("path is : "+path.toString());
-    print(finalResponse);
-    return finalResponse;
+    return response;
   }
 }

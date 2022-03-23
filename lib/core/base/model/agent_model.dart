@@ -18,7 +18,6 @@ class AgentModel implements BaseModel{
 
   AgentModel({this.agentId,this.agentName,this.agentManagerName,this.agentAddress});
 
-
   @override
   Map<String, dynamic> toJson() => _$AgentModelToJson(this);
 
@@ -27,7 +26,9 @@ class AgentModel implements BaseModel{
     _$AgentModelFromJson(json);
   }
 
-  // JSON TO DART DENE
-//
+  factory AgentModel.fromJson(Map<String,dynamic> json){
+    return _$AgentModelFromJson(json);
+  }
+
  
 }
