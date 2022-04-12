@@ -69,4 +69,86 @@ class NetworkManager{
     print("path is : "+path.toString());
     return response;
   }
+
+  Future<Response?> postRequestToLogIn(String username,String password)async{
+    Response response;
+    String language = "en";
+    int _timeOut = 60*1000;
+
+    Map<String,String> headers = {
+      CONTENT_TYPE:APPLICATION_JSON,
+      ACCEPT:APPLICATION_JSON,
+      AUTHORIZATION:"Constant.token",
+      DEFAULT_LANGUAGE:language
+    };
+
+    var options = BaseOptions(
+        baseUrl:baseUrl,
+        connectTimeout: _timeOut,
+        receiveTimeout: _timeOut,
+        headers:headers
+    );
+
+    Map<String, String> body = {
+      'UserName': username,
+      'Password': password,
+    };
+    try{
+      response = await Dio(options).post("/api/user/authenticate",data:body);
+    }on DioError catch (e){
+      throw Exception(e.message);
+    }
+
+    if(response.statusCode == 200) return response;
+    return null;
+  }
+
+  Future<Response?> checkAuthorization(Map<String,dynamic> payload,String jwt) async {
+    Response response;
+    String language = "en";
+    int _timeOut = 60*1000;
+
+    Map<String,String> headers = {
+      CONTENT_TYPE:APPLICATION_JSON,
+      ACCEPT:APPLICATION_JSON,
+      AUTHORIZATION:"Constant.token",
+      DEFAULT_LANGUAGE:language,
+      "Authorization":""
+    };
+
+    var options = BaseOptions(
+        baseUrl:baseUrl,
+        connectTimeout: _timeOut,
+        receiveTimeout: _timeOut,
+        headers:headers
+    );
+
+    try{
+
+      options.headers["Authorization"] = "Bearer $jwt";
+      //print("checkAuth header: "+options.headers["Authorization"]);
+      switch(payload['role']) {
+        case "Expert": {
+          response = await Dio(options).get("/api/user/expert");
+        }
+        break;
+
+        case "Manager": {
+          response = await Dio(options).get("/api/user/manager");
+        }
+        break;
+
+        default: {
+          response = await Dio(options).get("/api/user/admin");
+        }
+        break;
+      }
+    }on DioError catch (e){
+      throw Exception(e.message);
+    }
+
+    if(response.statusCode == 200) return response;
+    return null;
+  }
+
 }
