@@ -4,11 +4,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/init/network/network_manager.dart';
+import '../../../main.dart';
 
 class HomeScreen extends StatefulWidget {
   final String jwt;
   final Map<String,dynamic> payload;
-
   HomeScreen(this.jwt, this.payload);
 
   factory HomeScreen.fromBase64(String jwt) =>
@@ -27,13 +27,23 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late NetworkManager service;
+  late String loginTime;
 
   @override
   void initState() {
     service = NetworkManager.instance;
+    getLoginTime;
     //print("PAYLOAD====>"+widget.payload.toString());
     super.initState();
   }
+
+  void get getLoginTime async {
+    var loginTime_ = await storage.read(key: "loginTime");
+    setState(() {
+      loginTime=loginTime_!;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             )
                 :
-            snapshot.hasError ? Text("An error occurred") : CircularProgressIndicator()
+            snapshot.hasError ? Text(DateTime.now().toString()+" -- "+loginTime+" An error occurred") : CircularProgressIndicator()
         ),
       ),
     );

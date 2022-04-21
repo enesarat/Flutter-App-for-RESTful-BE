@@ -79,6 +79,8 @@ class _LoginPageState extends State<LoginPage> {
                     var jwt = await tryLogin(username, password);
                     if(jwt != null) {
                       storage.write(key: "jwt", value: jwt.data);
+                      storage.write(key: "loginTime", value: DateTime.now().toString());
+                      print(jwt.data);
                       Navigator.push(
                           context,
                           MaterialPageRoute(

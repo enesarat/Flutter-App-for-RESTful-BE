@@ -21,7 +21,7 @@ class _SingleAgentScreenState extends BaseState<SingleAgentScreen> {
     Response response;
     try{
       isLoading=true;
-      response = await service.getRequest<AgentModel>("/api/agent/getagentbyid/1");
+      response = await service.getRequest("/api/agent/getagentbyid/1");
 
       isLoading=false;
       print("status : "+response.statusCode.toString());
