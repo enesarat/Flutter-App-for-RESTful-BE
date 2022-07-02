@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../core/init/network/network_manager.dart';
 import '../../../main.dart';
 import '../../home/index/home_view.dart';
+import '../../home/index/home_view_old.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -84,7 +85,7 @@ class _LoginPageState extends State<LoginPage> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => HomeScreen.fromBase64(jwt.data)
+                              builder: (context) => HomeView.fromBase64(jwt.data)
                           )
                       );
                     } else {

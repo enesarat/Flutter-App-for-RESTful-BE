@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import '../../../core/base/model/agent_model.dart';
 import '../../../core/init/network/network_manager.dart';
 
-class ListAgentScreen extends StatefulWidget {
+class ListAgentScreen_ extends StatefulWidget {
   @override
   _ListAgentScreenState createState() => _ListAgentScreenState();
 }
 
-class _ListAgentScreenState extends State<ListAgentScreen> {
+class _ListAgentScreenState extends State<ListAgentScreen_> {
   late NetworkManager service;
   AgentModel? singleAgent;
   bool isLoading = false;

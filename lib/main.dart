@@ -10,6 +10,7 @@ import 'package:sample_app_with_restful_api/view/authentication/login/login_view
 import 'package:sample_app_with_restful_api/view/authentication/test/view/test_view.dart';
 import 'package:sample_app_with_restful_api/view/home/agent/list_agent_view.dart';
 import 'package:sample_app_with_restful_api/view/home/agent/single_agent_view.dart';
+//import 'package:sample_app_with_restful_api/view/home/index/home_view_old.dart';
 import 'package:sample_app_with_restful_api/view/home/index/home_view.dart';
 
 import 'core/init/security/asymmetric_cryptography.dart';
@@ -71,7 +72,7 @@ class MyApp extends StatelessWidget {
               } else {
                 var payload = json.decode(ascii.decode(base64.decode(base64.normalize(jwt[1]))));
                 if(DateTime.fromMillisecondsSinceEpoch(payload["exp"]*1000).isAfter(DateTime.now())) {
-                  return HomeScreen(str, payload);
+                  return HomeView(str, payload);
                 } else {
 
                   return LoginPage();

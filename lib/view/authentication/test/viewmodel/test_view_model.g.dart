@@ -9,7 +9,8 @@ part of 'test_view_model.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$TestViewModel on _TestViewModelBase, Store {
-  final _$valueAtom = Atom(name: '_TestViewModelBase.value');
+  late final _$valueAtom =
+      Atom(name: '_TestViewModelBase.value', context: context);
 
   @override
   int get value {
@@ -24,8 +25,8 @@ mixin _$TestViewModel on _TestViewModelBase, Store {
     });
   }
 
-  final _$_TestViewModelBaseActionController =
-  ActionController(name: '_TestViewModelBase');
+  late final _$_TestViewModelBaseActionController =
+      ActionController(name: '_TestViewModelBase', context: context);
 
   @override
   void increment() {

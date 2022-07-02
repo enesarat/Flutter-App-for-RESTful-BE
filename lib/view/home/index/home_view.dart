@@ -1,18 +1,21 @@
 import 'dart:convert';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-import '../../../core/init/network/network_manager.dart';
-import '../../../main.dart';
+import '../../../core/base/state/base_state.dart';
+import '../../../core/base/view/base_view.dart';
+import '../../../viewmodel/home_view_model.dart';
+import '../agent/list_agent_view.dart';
+import '../agent/list_agent_view_test.dart';
 
-class HomeScreen extends StatefulWidget {
+
+class HomeView extends StatefulWidget {
   final String jwt;
   final Map<String,dynamic> payload;
-  HomeScreen(this.jwt, this.payload);
+  HomeView(this.jwt, this.payload);
 
-  factory HomeScreen.fromBase64(String jwt) =>
-      HomeScreen(
+  factory HomeView.fromBase64(String jwt) =>
+      HomeView(
           jwt,
           json.decode(
               ascii.decode(
@@ -22,47 +25,57 @@ class HomeScreen extends StatefulWidget {
       );
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _HomeViewState createState() => _HomeViewState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  late NetworkManager service;
-  late String loginTime;
+class _HomeViewState extends BaseState<HomeView> {
+  HomeViewModel viewModel = HomeViewModel();
 
   @override
   void initState() {
-    service = NetworkManager.instance;
-    getLoginTime;
+    viewModel.initService();
     //print("PAYLOAD====>"+widget.payload.toString());
+    print("HOME WIEW");
+
     super.initState();
   }
-
-  void get getLoginTime async {
-    var loginTime_ = await storage.read(key: "loginTime");
-    setState(() {
-      loginTime=loginTime_!;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Secret Data Screen")),
-      body: Center(
-        child: FutureBuilder(
-            future: service.checkAuthorization(widget.payload,widget.jwt),
-            builder: (context, snapshot) =>
-            snapshot.hasData ?
-            Column(
-              children: <Widget>[
-                Text("${widget.payload['nameid']}, here's the data:"),
-                Text(snapshot.data.toString())
-              ],
-            )
-                :
-            snapshot.hasError ? Text(DateTime.now().toString()+" -- "+loginTime+" An error occurred") : CircularProgressIndicator()
-        ),
-      ),
+    return BaseView<HomeViewModel>(
+        viewModel: HomeViewModel(),
+        onModelReady: (model){
+          viewModel=model;
+        },
+        onPageBuilder: (context,value) => scaffoldBody,
+        onDispose: (){}
     );
   }
+
+  Widget get scaffoldBody=>Scaffold(
+    appBar: AppBar(title: Text("Secret Data Screen")),
+    body: Center(
+      child: FutureBuilder(
+          future: viewModel.service?.checkAuthorization(widget.payload,widget.jwt),
+          builder: (context, snapshot) =>
+          snapshot.hasData ?
+          Column(
+            children: <Widget>[
+              Text("${widget.payload['nameid']}, here's the data:"),
+              Text(snapshot.data.toString()),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ListAgentScreen_()),
+                  );
+                },
+                child: Text("All Agent"),
+              )
+            ],
+          )
+              :
+          snapshot.hasError ? Text(" An error occurred") : CircularProgressIndicator()
+      ),
+    ),
+  );
 }
